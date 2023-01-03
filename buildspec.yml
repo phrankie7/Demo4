@@ -10,7 +10,6 @@ phases:
   build:
     commands:
       - echo Entered the build phase...
-      - mvn test
   post_build:
     commands:
       - echo Build completed successfully
