@@ -2,19 +2,23 @@ version: 0.2
 
 phases:
   install:
-    runtime-versions:
-      java: corretto11
+    commands:
+      - apt-get update -y
+      - apt-get install -y software-properties-common
+      - add-apt-repository ppa:openjdk-r/ppa
+      - apt-get update -y
+      - apt-get install -y openjdk-8-jdk
+      - apt-get install -y maven
   pre_build:
     commands:
-      - echo Nothing to do in the pre_build phase...
+      - echo Logging in to Amazon ECR...
+      - $(aws ecr get-login --region $AWS_DEFAULT_REGION)
   build:
     commands:
-      - echo Entered the build phase...
-      - mvn clean package
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - mvn install
   post_build:
     commands:
-      - echo Build completed successfully
-artifacts:
-  files:
-    - target/order-service.jar
-  discard-paths: yes
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
